@@ -8,12 +8,11 @@ from telegram.ext import Application, CommandHandler, ContextTypes
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 
-# Ссылка на raw-файл hater_bot.py
-GIST_URL = "ВСТАВЬ_СЮДА_RAW_ССЫЛКУ"
+GITHUB_URL = "https://raw.githubusercontent.com/paliydmitro312-byte/hater_bot.py/main/hater_bot.py"
 
 
 def get_phrases():
-    response = requests.get(GIST_URL, timeout=10)
+    response = requests.get(GITHUB_URL, timeout=10)
     response.raise_for_status()
 
     text = response.text
@@ -22,7 +21,7 @@ def get_phrases():
     end = text.find("]", start)
 
     if start == -1 or end == -1:
-        raise ValueError("Список PHRASES не найден")
+        raise ValueError("Не найден список PHRASES")
 
     block = text[start + len("PHRASES = ["):end]
 
@@ -55,8 +54,7 @@ async def insult(update: Update, context: ContextTypes.DEFAULT_TYPE):
             await update.message.reply_text("Фразы не найдены 😭")
             return
 
-        phrase = random.choice(phrases)
-        await update.message.reply_text(phrase)
+        await update.message.reply_text(random.choice(phrases))
 
     except Exception as error:
         print("Ошибка:", error)
